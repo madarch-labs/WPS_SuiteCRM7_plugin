@@ -2,9 +2,11 @@
 /**
  * WPS Integration for SuiteCRM 7 — Module Loader package.
  *
- *  - application-level logic hook after_save → XADD {stream} * data '{json}' into the WPS Redis Stream;
+ *  - application-level logic hooks before_save / after_save / after_delete (+ relationship hooks, off by default) →
+ *    XADD {stream} * data '{json}' into the WPS Redis Stream: events v2 with event_type, before, changed_fields, wps_origin;
  *  - custom entry point "wpsApi" → CRM API with the WPS contract (JSON:API, X-Auth-Key):
- *      GET/POST/PUT /api/v9/{module}[/{id}], GET /api/v9/{module}?filter[field]=value&size=1, GET /api/v9/modules
+ *      capabilities, modules, GET/POST/PUT/DELETE /api/v9/{module}[/{id}], search with filter operators / sort / cursor /
+ *      fields / count, /api/v9/{module}/{id}/relationships/{link}[/{related_id}] with relationship fields (contract 2.0)
  *    (/api/v9/... is mapped to index.php?entryPoint=wpsApi&wps_path=... by a web server rewrite rule, config/apache-wps.conf);
  *  - custom field Leads.wps_processed_c — "Processed by WPS" marker set by WPS processes (scripts/wps_post_execute.php).
  *
@@ -19,13 +21,13 @@ $manifest = [
     'readme' => '',
     'key' => 'wps',
     'author' => 'WPS',
-    'description' => 'Workflow Processing Service integration for SuiteCRM 7: after_save events to the WPS Redis Stream + /api/v9 endpoint',
+    'description' => 'Workflow Processing Service integration for SuiteCRM 7: events v2 (create/update/delete with old values) to the WPS Redis Stream + /api/v9 endpoint (contract 2.0)',
     'icon' => '',
     'is_uninstallable' => true,
     'name' => 'WPS Integration for SuiteCRM 7',
-    'published_date' => '2026-10-15 00:00:00',
+    'published_date' => '2026-10-20 00:00:00',
     'type' => 'module',
-    'version' => '1.1.0',
+    'version' => '1.2.0',
     'remove_tables' => 'prompt',
 ];
 
